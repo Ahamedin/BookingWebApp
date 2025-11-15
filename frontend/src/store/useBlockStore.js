@@ -2,9 +2,10 @@ import { create } from "zustand";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const BASE_URL = import.meta.env.MODE === "development"
+const BASE_URL =
+  import.meta.env.MODE === "development"
     ? "http://localhost:3000"
-    : import.meta.env.VITE_API_URL;
+    : "https://bookingwebapp-backend.onrender.com";
 
 
 export const useBlockStore = create((set,get) => ({
