@@ -3,24 +3,24 @@ import { Link } from 'react-router-dom';
 import { BrickWall, Menu } from "lucide-react";
 import ThemeSelector from './ThemeSelector';
 
-const API_BASE = import.meta.env.VITE_API_URL;
-
 function Navbar() {
+
+  const API_URL = import.meta.env.VITE_API_URL;  // dynamic API URL
 
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`${API_BASE}/auth/user`, { credentials: 'include' })
+    fetch(`${API_URL}/auth/user`, {
+      credentials: 'include',
+    })
       .then(res => res.json())
       .then(data => {
         if (data) {
           setUser(data);
           setIsAdmin(data.isAdmin);
-        } else {
-          setUser(null);
-        }
+        } else setUser(null);
       })
       .catch(() => setUser(null));
   }, []);
@@ -39,11 +39,11 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* MOBILE */}
+        {/* MOBILE MENU */}
         <div className="lg:hidden flex items-center">
           <ThemeSelector />
 
-          <button onClick={() => setIsOpen(!isOpen)} className="text-3xl">
+          <button onClick={() => setIsOpen(!isOpen)} className="text-3xl text-base-content focus:outline-none">
             <Menu />
           </button>
 
@@ -54,41 +54,54 @@ function Navbar() {
               <li><Link to="/aboutuspage" onClick={() => setIsOpen(false)}>About</Link></li>
               <li><Link to="/contactpage" onClick={() => setIsOpen(false)}>Contact</Link></li>
 
-              {!isAdmin && <li><Link to="/savedpage" onClick={() => setIsOpen(false)}>Wishlist</Link></li>}
+              {!isAdmin && (
+                <li><Link to="/savedpage" onClick={() => setIsOpen(false)}>Wishlist</Link></li>
+              )}
 
               {user ? (
-                <li><a href={`${API_BASE}/auth/logout`}>Logout</a></li>
+                <li><a href={`${API_URL}/auth/logout`} onClick={() => setIsOpen(false)}>Logout</a></li>
               ) : (
-                <li><a href={`${API_BASE}/auth/google`}>Login</a></li>
+                <li><a href={`${API_URL}/auth/google`} onClick={() => setIsOpen(false)}>Login</a></li>
               )}
             </ul>
           )}
         </div>
 
-        {/* DESKTOP */}
+        {/* DESKTOP NAV */}
         <div className="hidden lg:flex items-center gap-4 flex-1 justify-center">
-          <Link to="/">Home</Link>
-          <Link to="/modals">Modal</Link>
-          <Link to="/aboutuspage">About</Link>
-          <Link to="/contactpage">Contact</Link>
+          <Link to="/" className="font-serif">Home</Link>
+          <Link to="/modals" className="font-serif">Modal</Link>
+          <Link to="/aboutuspage" className="font-serif">About</Link>
+          <Link to="/contactpage" className="font-serif">Contact</Link>
         </div>
 
+        {/* RIGHT SIDE */}
         <div className="hidden lg:flex items-center gap-3 justify-end flex-1">
           <ThemeSelector />
 
           {!isAdmin && (
             <Link to="/savedpage" className="btn btn-ghost btn-circle">
-              ❤️
+              <svg
+                className="size-6"
+                viewBox="0 0 64 64"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={3.5}
+              >
+                <line x1="8" y1="56" x2="24" y2="40" />
+                <path d="m52 28 4-4-4-4-8-8-4-4-4 4a5.66 5.66 0 0 0 0 8l-8 8a11.31 11.31 0 0 0-16 0l23.94 24.12L36 52a11.36 11.36 0 0 0 0-16l8-8a5.66 5.66 0 0 0 8 0z" />
+              </svg>
             </Link>
           )}
 
           {user ? (
             <div className="flex items-center gap-2">
-              <img src={user?.photo} className="w-8 h-8 rounded-full" />
-              <a href={`${API_BASE}/auth/logout`} className="btn btn-sm">Logout</a>
+              <img src={user.photo} className="w-8 h-8 rounded-full" />
+              <a href={`${API_URL}/auth/logout`} className="btn btn-sm">Logout</a>
             </div>
           ) : (
-            <a href={`${API_BASE}/auth/google`} className="btn btn-sm btn-primary">
+            <a href={`${API_URL}/auth/google`} className="btn btn-sm btn-primary">
               Login
             </a>
           )}
