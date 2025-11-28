@@ -3,44 +3,34 @@ import passport from 'passport';
 
 const router = Router();
 
-// FRONTEND URLS (controlled by environment)
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-const LOGOUT_REDIRECT = process.env.LOGOUT_REDIRECT || "http://localhost:5173";
-
-// =====================
-// 1. START GOOGLE LOGIN
-// =====================
+// Start Google OAuth login flow
 router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-// =====================
-// 2. GOOGLE CALLBACK
-// =====================
+// Handle Google OAuth callback
 router.get('/google/callback',
   passport.authenticate('google', {
-    failureRedirect: `${CLIENT_URL}/login`,
-    session: true
+    failureRedirect: 'https://bookingwebapp-6ls7.onrender.com/login',
+    session: true,
   }),
   (req, res) => {
-    // Redirect to your frontend after successful Google login
-    res.redirect(CLIENT_URL);
+    // Redirect user to the frontend deployed URL
+    res.redirect('https://bookingwebapp-6ls7.onrender.com');
   }
 );
 
-// =====================
-// 3. LOGOUT
-// =====================
+// Logout
 router.get('/logout', (req, res, next) => {
-  req.logout(function (err) {
+  req.logout(err => {
     if (err) return next(err);
-    res.redirect(LOGOUT_REDIRECT);
+
+    // Redirect to frontend
+    res.redirect('https://bookingwebapp-6ls7.onrender.com');
   });
 });
 
-// =====================
-// 4. GET CURRENT USER
-// =====================
+// Check current user
 router.get('/user', (req, res) => {
   res.json(req.user || null);
 });
