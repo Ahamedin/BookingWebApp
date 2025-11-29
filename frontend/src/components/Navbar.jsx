@@ -5,14 +5,14 @@ import ThemeSelector from './ThemeSelector';
 
 function Navbar() {
 
-  const API_URL = import.meta.env.VITE_API_URL;  // dynamic API URL
-
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; 
+
   useEffect(() => {
-    fetch(`${API_URL}/auth/user`, {
+    fetch(`${BACKEND_URL}/auth/user`, {
       credentials: 'include',
     })
       .then(res => res.json())
@@ -20,10 +20,12 @@ function Navbar() {
         if (data) {
           setUser(data);
           setIsAdmin(data.isAdmin);
-        } else setUser(null);
+        } else {
+          setUser(null);
+        }
       })
       .catch(() => setUser(null));
-  }, []);
+  }, [BACKEND_URL]);
 
   return (
     <div className="bg-base-100/80 backdrop-blur-lg border-b border-base-content/10 sticky top-0 z-50">
@@ -59,9 +61,9 @@ function Navbar() {
               )}
 
               {user ? (
-                <li><a href={`${API_URL}/auth/logout`} onClick={() => setIsOpen(false)}>Logout</a></li>
+                <li><a href={`${BACKEND_URL}/auth/logout`} onClick={() => setIsOpen(false)}>Logout</a></li>
               ) : (
-                <li><a href={`${API_URL}/auth/google`} onClick={() => setIsOpen(false)}>Login</a></li>
+                <li><a href={`${BACKEND_URL}/auth/google`} onClick={() => setIsOpen(false)}>Login</a></li>
               )}
             </ul>
           )}
@@ -75,7 +77,7 @@ function Navbar() {
           <Link to="/contactpage" className="font-serif">Contact</Link>
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* RIGHT SIDE (desktop) */}
         <div className="hidden lg:flex items-center gap-3 justify-end flex-1">
           <ThemeSelector />
 
@@ -98,10 +100,10 @@ function Navbar() {
           {user ? (
             <div className="flex items-center gap-2">
               <img src={user.photo} className="w-8 h-8 rounded-full" />
-              <a href={`${API_URL}/auth/logout`} className="btn btn-sm">Logout</a>
+              <a href={`${BACKEND_URL}/auth/logout`} className="btn btn-sm">Logout</a>
             </div>
           ) : (
-            <a href={`${API_URL}/auth/google`} className="btn btn-sm btn-primary">
+            <a href={`${BACKEND_URL}/auth/google`} className="btn btn-sm btn-primary">
               Login
             </a>
           )}
