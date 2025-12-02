@@ -12,6 +12,7 @@ function Navbar() {
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
+
 useEffect(() => {
   fetch(`${BACKEND_URL}/auth/user`, { credentials: "include" })
     .then(res => res.json())
@@ -19,12 +20,11 @@ useEffect(() => {
       if (data) {
         setUser(data);
         setIsAdmin(data.isAdmin);
-      } else {
-        setUser(null);
       }
     })
     .catch(() => setUser(null));
 }, []);
+
 
 
   return (
