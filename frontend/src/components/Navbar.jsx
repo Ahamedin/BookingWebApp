@@ -9,23 +9,23 @@ function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
-  useEffect(() => {
-    fetch(`${BACKEND_URL}/auth/user`, {
-      credentials: 'include',
+useEffect(() => {
+  fetch(`${BACKEND_URL}/auth/user`, { credentials: "include" })
+    .then(res => res.json())
+    .then(data => {
+      if (data) {
+        setUser(data);
+        setIsAdmin(data.isAdmin);
+      } else {
+        setUser(null);
+      }
     })
-      .then(res => res.json())
-      .then(data => {
-        if (data) {
-          setUser(data);
-          setIsAdmin(data.isAdmin);
-        } else {
-          setUser(null);
-        }
-      })
-      .catch(() => setUser(null));
-  }, [BACKEND_URL]);
+    .catch(() => setUser(null));
+}, []);
+
 
   return (
     <div className="bg-base-100/80 backdrop-blur-lg border-b border-base-content/10 sticky top-0 z-50">
@@ -61,9 +61,9 @@ function Navbar() {
               )}
 
               {user ? (
-                <li><a href={`${BACKEND_URL}/auth/logout`} onClick={() => setIsOpen(false)}>Logout</a></li>
+                <li><a href={`${BACKEND_URL}/auth/logout`}>Logout</a></li>
               ) : (
-                <li><a href={`${BACKEND_URL}/auth/google`} onClick={() => setIsOpen(false)}>Login</a></li>
+                <li><a href={`${BACKEND_URL}/auth/google`}>Login</a></li>
               )}
             </ul>
           )}
@@ -103,9 +103,7 @@ function Navbar() {
               <a href={`${BACKEND_URL}/auth/logout`} className="btn btn-sm">Logout</a>
             </div>
           ) : (
-            <a href={`${BACKEND_URL}/auth/google`} className="btn btn-sm btn-primary">
-              Login
-            </a>
+<a href={`${BACKEND_URL}/auth/google`} className="btn btn-sm btn-primary">Login</a>
           )}
         </div>
 
