@@ -14,16 +14,22 @@ const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
 
 useEffect(() => {
-  fetch(`${BACKEND_URL}/auth/user`, { credentials: "include" })
+  fetch(`${BACKEND_URL}/auth/user`, { 
+    credentials: "include",
+    cache: "no-store"  // ⬅ ADD THIS
+  })
     .then(res => res.json())
     .then(data => {
       if (data) {
         setUser(data);
         setIsAdmin(data.isAdmin);
+      } else {
+        setUser(null);
       }
     })
     .catch(() => setUser(null));
 }, []);
+
 
 
 
