@@ -22,16 +22,17 @@ app.use(express.json());
 app.use(rateLimiter);
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || "TOPSECRETWORD",
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    secure: true,
-    httpOnly: true,
-    sameSite: "none",
+    secure: true,        // because Render uses HTTPS
+    httpOnly: true, 
+    sameSite: "none"     // THIS IS THE FIX ❗
   }
 }));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
