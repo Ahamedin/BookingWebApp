@@ -57,8 +57,23 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.deserializeUser(async (user, done) => {
+  try {
+    const dbUser = await prisma.users.findUnique({
+      where: { googleid: user.googleid }
+    });
+
+    if (!dbUser) return done(null, null);
+
+    // Attach dynamic fields (NOT stored in DB)
+    dbUser.photo = user.photo;
+    dbUser.isAdmin = user.isAdmin;
+
+    done(null, dbUser);
+
+  } catch (err) {
+    done(err, null);
+  }
 });
 
 export default passport;
