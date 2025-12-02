@@ -13,9 +13,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ❗ IMPORTANT: Update CORS for your actual frontend URL
 app.use(cors({
-  origin: "https://bookingwebapp-6ls7.onrender.com",
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }));
 
@@ -23,25 +22,22 @@ app.use(express.json());
 app.use(rateLimiter);
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "TOPSECRETWORD",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    secure: false,
+    secure: true,
     httpOnly: true,
-    sameSite: "lax"
+    sameSite: "none",
   }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// API routes
 app.use("/api/blocks", productRoutes);
 app.use("/auth", auth);
-
-// ❌ REMOVE frontend serving (Render handles frontend separately)
 
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
